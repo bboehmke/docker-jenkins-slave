@@ -2,16 +2,14 @@
 set -e
 
 if [[ -x $1 ]]; then
-  $1
+  "$@"
 else
   if [[ ! -z "$JENKINS_URL" ]]; then
-      URL="-jnlpUrl $JENKINS_URL"
-  fi
-  if [[ ! -z "$JENKINS_SECRET" ]]; then
-      SECRET="-secret $JENKINS_SECRET"
+      URL="-url $JENKINS_URL"
   fi
 
-  java -jar /usr/share/jenkins/slave.jar $URL $SECRET "$@"
+  java -cp /opt/slave.jar hudson.remoting.jnlp.Main -headless $URL $JENKINS_SECRET $JENKINS_NODE_NAME "$@"
+
 fi
 
 exit 0
